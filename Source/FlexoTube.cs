@@ -26,6 +26,7 @@ THE SOFTWARE.
 
 using System.Collections;
 using UnityEngine;
+using KSP.Localization;
 
 namespace FlexoTubes
 {
@@ -33,26 +34,37 @@ namespace FlexoTubes
     {
 		[KSPField]
 		public float maxTranslate;
+		
 		[KSPField]
 		public float maxRotate;
+		
 		[KSPField(isPersistant = true)]
 		public int targetYTransFrame;
+		
 		[KSPField(isPersistant = true)]
 		public int targetXTransFrame;
+		
 		[KSPField(isPersistant = true)]
 		public int targetYRotFrame;
+		
 		[KSPField(isPersistant = true)]
 		public int targetXRotFrame;
+		
 		[KSPField(isPersistant = true)]
 		public bool IsDeployed;
-		[KSPField(guiActive = true)]
-		public string Status = "Retracted (Basic Mode)";
-		[KSPField(guiActive = true)]
-		public string Magnets = "Enabled";
-		[KSPField(guiActive = true)]
+		
+		[KSPField(guiActive = true, guiName = "#autoLOC_ContractConfigurator_000")/*Status*/]
+		public string Status = Localizer.Format("#autoLOC_ContractConfigurator_001")/*Retracted (Basic Mode)*/;
+		
+		[KSPField(guiActive = true, guiName = "#autoLOC_ContractConfigurator_002")/*Magnets*/]
+		public string Magnets = Localizer.Format("#autoLOC_ContractConfigurator_003")/*Enabled*/;
+		
+		[KSPField(guiActive = true, guiName = "#autoLOC_ContractConfigurator_004")/*Magnetic Force*/]
 		public string MagneticForce = "";
-		[KSPField(guiActive = true)]
+		
+		[KSPField(guiActive = true, guiName = "#autoLOC_ContractConfigurator_005")/*Magnetic Torque*/]
 		public string MagneticTorque = "";
+		
 		[KSPField]
 		public string ReferenceTransform = "DockBase";
 
@@ -61,10 +73,13 @@ namespace FlexoTubes
 
 		[KSPField]
 		public float activeForce = 0.1f;
+		
 		[KSPField]
 		public float activeTorque = 0.1f;
+		
 		[KSPField]
 		public float activeRange = 1f;
+		
 		[KSPField]
 		public float activeReEngage = 1.5f;
 
@@ -149,10 +164,10 @@ namespace FlexoTubes
 			{
 				acquireForce = 0;
 				acquireTorque = 0;
-				Magnets = "Disabled";
+				Magnets = Localizer.Format("#autoLOC_ContractConfigurator_006")/*Disabled*/;
 			}
 			else
-				Magnets = "Enabled";
+				Magnets = Localizer.Format("#autoLOC_ContractConfigurator_003")/*Enabled*/;
 
 			if (IsDeployed)
 			{
@@ -205,9 +220,9 @@ namespace FlexoTubes
 		{
 			string s = base.GetInfo();
 
-			s += string.Format("\nMax Translation: {0:F2}m", maxTranslate);
+			s += string.Format(Localizer.Format("#autoLOC_ContractConfigurator_014")/*\nMax Translation:*/ + " {0:F2}m", maxTranslate);
 
-			s += string.Format("\nMax Rotation: {0:F2}°", maxRotate);
+			s += string.Format(Localizer.Format("#autoLOC_ContractConfigurator_015")/*\nMax Rotation:*/ + " {0:F2}°", maxRotate);
 
 			return s;
 		}
@@ -356,37 +371,37 @@ namespace FlexoTubes
 		private string setStatus()
 		{
 			if (moving)
-				return "Moving...";
+				return Localizer.Format("#autoLOC_ContractConfigurator_016")/*Moving...*/;
 
 			switch (state)
 			{
 				case "PreAttached":
 					Events["Deploy"].active = false;
 					Events["Retract"].active = false;
-					return "Attached";
+					return Localizer.Format("#autoLOC_ContractConfigurator_017")/*Attached*/;
 				case "Docked (same vessel)":
 				case "Docked (docker)":
 				case "Docked (dockee)":
 					Events["Deploy"].active = false;
 					Events["Retract"].active = false;
-					return "Docked";
+					return Localizer.Format("#autoLOC_ContractConfigurator_018")/*Docked*/;
 				case "Acquire":
-					return "Acquiring...";
+					return Localizer.Format("#autoLOC_ContractConfigurator_019")/*Acquiring...*/;
 				case "Acquire (dockee)":
-					return "Acquiring (dockee)...";
+					return Localizer.Format("#autoLOC_ContractConfigurator_020")/*Acquiring (dockee)...*/;
 			}
 
 			if (IsDeployed)
 			{
 				Events["Deploy"].active = false;
 				Events["Retract"].active = true;
-				return "Deployed (Flexible Mode)";
+				return Localizer.Format("#autoLOC_ContractConfigurator_021")/*Deployed (Flexible Mode)*/;
 			}
 			else
 			{
 				Events["Deploy"].active = true;
 				Events["Retract"].active = false;
-				return "Retracted (Basic Mode)";
+				return Localizer.Format("#autoLOC_ContractConfigurator_001")/*Retracted (Basic Mode)*/;
 			}
 		}
 
@@ -744,7 +759,7 @@ namespace FlexoTubes
 			if (MagnetsEnabled)
 			{
 				MagnetsEnabled = false;
-				Magnets = "Disabled";
+				Magnets = Localizer.Format("#autoLOC_ContractConfigurator_006")/*Disabled*/;
 				acquireForce = 0;
 				acquireTorque = 0;
 
@@ -757,7 +772,7 @@ namespace FlexoTubes
 			else
 			{
 				MagnetsEnabled = true;
-				Magnets = "Enabled";
+				Magnets = Localizer.Format("#autoLOC_ContractConfigurator_003")/*Enabled*/;
 				if (IsDeployed)
 				{
 					acquireForce = activeForce;
